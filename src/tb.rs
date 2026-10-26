@@ -125,7 +125,8 @@ pub fn rank_rootmoves(td: &mut ThreadData) {
         if dtz_success != 0 {
             let c_rootmoves: &TbRootMoves = &*tb_ptr;
             update_rootmoves(&mut td.root_moves, c_rootmoves);
-            td.shared.stop_probing_tb.store(true, Ordering::Relaxed);
+            // A root DTZ hit only ranks root moves; keep in-search probing so we
+            // don't have to re-prove the tablebase win by brute force at high depths.
             td.shared.root_in_tb.store(true, Ordering::Relaxed);
             return;
         }
